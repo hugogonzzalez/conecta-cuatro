@@ -26,10 +26,46 @@ const DIRECCIONES = [
 // color. Si es así, devuelve { ganador: color, linea: [[col, fila] x 4] }.
 // Si no hay ganador, devuelve null.
 export function calcularGanador(tablero) {
+  // Recorre todas las columnas
+  for (let col = 0; col < COLUMNAS; col++) {
+    // Recorre todas las filas de esa columna
+    for (let fila = 0; fila < FILAS; fila++) {
+      // Color de esta posición ('R', 'A' o null si está vacía)
+      const color = ficha(tablero, col, fila)
+      if (color === null) continue
+
+      // Prueba las 4 direcciones desde esta posición
+      for (const [dc, df] of DIRECCIONES) {
+        // Aquí guardamos las posiciones de la línea, si la hay
+        const linea = []
+        let iguales = true
+
+        // Mira las 4 posiciones (la actual y las 3 siguientes)
+        for (let k = 0; k < 4; k++) {
+          const c = col + k * dc
+          const f = fila + k * df
+
+          // Si alguna no es del mismo color, esta dirección no sirve
+          if (ficha(tablero, c, f) !== color) {
+            iguales = false
+            break
+          }
+          linea.push([c, f])
+        }
+
+        // Si las 4 coinciden, hay ganador
+        if (iguales) {
+          return { ganador: color, linea }
+        }
+      }
+    }
+  }
+
+  // Ninguna línea de 4: no hay ganador todavía
   return null
 }
 
-// TODO (paso 4): devuelve true si todas las columnas están llenas
+// Devuelve true si todas las columnas tienen FILAS fichas (tablero lleno)
 export function tableroLleno(tablero) {
-  return false
+  return tablero.every((columna) => columna.length === FILAS)
 }
