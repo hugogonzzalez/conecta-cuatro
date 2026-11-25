@@ -27,13 +27,53 @@ function Partida() {
     setMovimientoActual(historialNuevo.length - 1)
   }
 
+  // Vuelve a un movimiento anterior del historial
+  function irA(movimiento) {
+    setMovimientoActual(movimiento)
+  }
+
+  // Texto del botón de un movimiento, con la columna jugada
+  function textoMovimiento(movimiento) {
+    // El movimiento 0 es el tablero inicial: no hay columna que mostrar
+    if (movimiento === 0) {
+      return 'Inicio de la partida'
+    }
+
+    // Comparamos el tablero de antes con el de después
+    const anterior = historial[movimiento - 1]
+    const actual = historial[movimiento]
+
+    // La columna jugada es la que tiene distinta longitud
+    for (let col = 0; col < COLUMNAS; col++) {
+      if (anterior[col].length !== actual[col].length) {
+        // Sumamos 1 para mostrarla del 1 al 7
+        return `Ir al movimiento #${movimiento} (columna ${col + 1})`
+      }
+    }
+
+    return `Ir al movimiento #${movimiento}`
+  }
+
+  // Una línea de la lista por cada tablero del historial
+  const movimientos = historial.map((tablero, movimiento) => {
+    return (
+      <li key={movimiento}>
+        <button onClick={() => irA(movimiento)}>
+          {textoMovimiento(movimiento)}
+        </button>
+      </li>
+    )
+  })
+
   return (
     <div className="partida">
       <div>
         {/* El turno lo calcula Partida y se lo pasamos al tablero */}
         <Tablero tablero={tableroActual} turno={turno} onJugar={jugar} />
       </div>
-      <div className="historial"></div>
+      <div className="historial">
+        <ol>{movimientos}</ol>
+      </div>
     </div>
   )
 }
