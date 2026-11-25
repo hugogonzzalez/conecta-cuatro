@@ -1,5 +1,6 @@
 import Columna from "./Columna"
 import { FILAS } from "../utils/calcularGanador"
+import Ficha from "./Ficha"
 
 function Tablero({ tablero, turno, onJugar }) {
   function elegirColumna(col) {
@@ -13,7 +14,9 @@ function Tablero({ tablero, turno, onJugar }) {
 
   return (
     <>
-      <div className="estado"></div>
+      <div className="estado">Turno de <Ficha valor={turno} mini />
+      {turno === 'R' ? ' Rojo' : ' Amarillo'}
+      </div>
       <div className="tablero">
         {tablero.map((columna, indice) => (
           <Columna
